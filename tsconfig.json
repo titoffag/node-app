@@ -3,15 +3,24 @@
     "module": "commonjs",
     "esModuleInterop": true,
     "target": "es6",
+    "types": [
+      "reflect-metadata"
+    ],
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "noImplicitAny": true,
     "moduleResolution": "node",
     "sourceMap": true,
     "outDir": "dist",
     "baseUrl": ".",
     "paths": {
-      "*": ["node_modules/*"]
+      "*": [
+        "node_modules/*"
+      ]
     },
-    "lib": ["es2015"]
+    "lib": [
+      "es2015"
+    ]
   },
   "include": ["src/**/*"]
 }
