@@ -14,3 +14,9 @@ export const routes = {
     byId: '/:id',
   },
 };
+
+export type TRawUser = {
+  login: string,
+  password: string,
+  age: number,
+}

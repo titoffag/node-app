@@ -1,26 +1,30 @@
 import { Request, Response } from 'express';
 
-import { STATUS_CODE } from '../constants';
+import { STATUS_CODE, TRawUser } from '../constants';
 import { UserService } from '../services/user.service';
 
 export class UserController {
   static async create(request: Request, response: Response) {
-    const newUser = request.body;
+    const { login, password, age } = request.body;
 
     try {
-      await UserService.create(newUser);
-      response.status(STATUS_CODE.CREATED).json();
-      // TODO: Add location header to response
+      const user: TRawUser = {
+        login,
+        password,
+        age,
+      };
+      const id = await UserService.create(user);
+      response.location(`/api/users/${id}`).sendStatus(STATUS_CODE.CREATED);
     } catch (error) {
       response.status(STATUS_CODE.BAD_REQUEST).json({ error: error.message });
     }
   }
 
   static async getAutoSuggest(request: Request, response: Response) {
-    const { loginSubstring, limit } = request.params;
+    const { loginSubstring = '', limit = 5 } = request.query;
 
     try {
-      const suggestedUsers = await UserService.getAutoSuggest(loginSubstring, limit);
+      const suggestedUsers = await UserService.getAutoSuggest(loginSubstring, +limit);
       response.status(STATUS_CODE.OK).json(suggestedUsers);
     } catch (error) {
       response.status(STATUS_CODE.BAD_REQUEST).json({ error: error.message });
@@ -39,11 +43,18 @@ export class UserController {
   }
 
   static async update(request: Request, response: Response) {
-    const updatedUser = request.body;
+    const { id } = request.params;
+    const { login, password, age } = request.body;
 
     try {
-      await UserService.update(updatedUser);
-      response.status(STATUS_CODE.NO_DATA).json();
+      const user: TRawUser = {
+        login,
+        password,
+        age,
+      };
+
+      await UserService.update(id, user);
+      response.sendStatus(STATUS_CODE.NO_DATA);
     } catch (error) {
       response.status(STATUS_CODE.BAD_REQUEST).json({ error: error.message });
     }
@@ -54,7 +65,7 @@ export class UserController {
 
     try {
       await UserService.remove(id);
-      response.status(STATUS_CODE.NO_DATA).json();
+      response.sendStatus(STATUS_CODE.NO_DATA);
     } catch (error) {
       response.status(STATUS_CODE.BAD_REQUEST).json({ error: error.message });
     }

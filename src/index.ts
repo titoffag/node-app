@@ -1,13 +1,14 @@
 import express from 'express';
-import dotenv from 'dotenv';
 
-import { rootRouter } from './routes';
-import { routes } from './constants';
+import { initializeLoaders } from './loaders';
 
-const app = express();
-dotenv.config();
+async function startServer() {
+  const app = express();
 
-const { APP_PORT } = process.env;
+  await initializeLoaders(app);
 
-app.use(routes.api, rootRouter);
-app.listen(APP_PORT, () => console.log(`Application listening on port ${APP_PORT}`));
+  const port = process.env.APP_PORT || 9001;
+  app.listen(port, () => console.log(`Application listening on port ${port}`));
+}
+
+startServer();
