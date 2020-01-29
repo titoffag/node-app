@@ -1,8 +1,10 @@
 import { injectable } from 'inversify';
 import createError from 'http-errors';
 import uuid from 'uuid/v1';
+import { getRepository } from 'typeorm';
 
 import { IUser, User } from '../models/user.model';
+import { UserEntity } from '../entities/user';
 import { STATUS_CODE, TRawUser } from '../constants';
 import { isDefined } from '../tools';
 
@@ -18,7 +20,10 @@ let users: IUser[] = [
 
 @injectable()
 export class UserRepository implements CrudRepository {
+  private readonly dataSource = getRepository(UserEntity);
+
   async getById(id: string): Promise<IUser> {
+    // const foundUser = await this.dataSource.findOne(+id);
     const foundUser = users.find(user => user.id === id);
 
     if (!isDefined(foundUser)) {

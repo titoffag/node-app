@@ -1,16 +1,20 @@
 import { Request, Response } from 'express';
-import { inject, injectable } from 'inversify';
+import { inject } from 'inversify';
+import { controller, httpDelete, httpGet, httpPost, httpPut, request, response } from 'inversify-express-utils';
 
-import { STATUS_CODE, TRawUser } from '../constants';
+import { DI_TOKEN, STATUS_CODE, TRawUser } from '../constants';
 import { CrudService } from '../services/crud.interface';
+import { userSchema } from '../middlewares/user.validation';
+import { validator } from '../index';
 
 import { CrudController } from './crud.interface';
 
-@injectable()
+@controller('/users')
 export class UserController implements CrudController {
-  @inject('CrudService') private userService: CrudService;
+  @inject(DI_TOKEN.UserService) private readonly userService: CrudService;
 
-  async create(request: Request, response: Response) {
+  @httpPost('/', validator.body(userSchema))
+  async create(@request() request: Request, @response() response: Response) {
     const { login, password, age } = request.body;
 
     try {
@@ -26,7 +30,8 @@ export class UserController implements CrudController {
     }
   }
 
-  async getAutoSuggest(request: Request, response: Response) {
+  @httpGet('/')
+  async getAutoSuggest(@request() request: Request, @response() response: Response) {
     const { loginSubstring = '', limit = 5 } = request.query;
 
     try {
@@ -37,7 +42,8 @@ export class UserController implements CrudController {
     }
   }
 
-  async getById(request: Request, response: Response) {
+  @httpGet('/:id')
+  async getById(@request() request: Request, @response() response: Response) {
     const { id } = request.params;
 
     try {
@@ -48,7 +54,8 @@ export class UserController implements CrudController {
     }
   }
 
-  async update(request: Request, response: Response) {
+  @httpPut('/:id', validator.body(userSchema))
+  async update(@request() request: Request, @response() response: Response) {
     const { id } = request.params;
     const { login, password, age } = request.body;
 
@@ -66,7 +73,8 @@ export class UserController implements CrudController {
     }
   }
 
-  async remove(request: Request, response: Response) {
+  @httpDelete('/:id')
+  async remove(@request() request: Request, @response() response: Response) {
     const { id } = request.params;
 
     try {

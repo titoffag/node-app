@@ -1,14 +1,14 @@
 import { inject, injectable } from 'inversify';
 
 import { IUser } from '../models/user.model';
-import { TRawUser } from '../constants';
+import { DI_TOKEN, TRawUser } from '../constants';
 import { CrudRepository } from '../repositories/crud.interface';
 
 import { CrudService } from './crud.interface';
 
 @injectable()
 export class UserService implements CrudService {
-  @inject('CrudRepository') private userRepository: CrudRepository;
+  @inject(DI_TOKEN.UserRepository) private readonly userRepository: CrudRepository;
 
   async getById(id: string): Promise<IUser> {
     return this.userRepository.getById(id);

@@ -6,17 +6,13 @@ export enum STATUS_CODE {
   NOT_FOUND = 404,
 }
 
-export const routes = {
-  api: '/api',
-  users: {
-    name: '/users',
-    root: '/',
-    byId: '/:id',
-  },
+export type TRawUser = {
+  login: string;
+  password: string;
+  age: number;
 };
 
-export type TRawUser = {
-  login: string,
-  password: string,
-  age: number,
-}
+export const DI_TOKEN = {
+  UserService: Symbol.for('UserService'),
+  UserRepository: Symbol.for('UserRepository'),
+};
