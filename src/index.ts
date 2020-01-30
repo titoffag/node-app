@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import express, { Application } from 'express';
 import expressJoi from 'express-joi-validation';
-import { createConnection } from 'typeorm';
+import { createConnection, getCustomRepository } from 'typeorm';
 import { Container } from 'inversify';
 import { InversifyExpressServer } from 'inversify-express-utils';
 import cors from 'cors';
@@ -35,7 +35,7 @@ async function startServer() {
   });
 
   container.bind<CrudService>(DI_TOKEN.UserService).to(UserService);
-  container.bind<CrudRepository>(DI_TOKEN.UserRepository).to(UserRepository);
+  container.bind<CrudRepository>(DI_TOKEN.UserRepository).toDynamicValue(() => getCustomRepository(UserRepository));
 
   const server = new InversifyExpressServer(container);
 

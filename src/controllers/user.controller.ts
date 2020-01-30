@@ -1,10 +1,19 @@
 import { Request, Response } from 'express';
 import { inject } from 'inversify';
-import { controller, httpDelete, httpGet, httpPost, httpPut, request, response } from 'inversify-express-utils';
+import {
+  controller,
+  httpDelete,
+  httpGet,
+  httpPost,
+  httpPut,
+  request,
+  response,
+} from 'inversify-express-utils';
 
-import { DI_TOKEN, STATUS_CODE, TRawUser } from '../constants';
+import { DI_TOKEN, STATUS_CODE } from '../constants';
 import { CrudService } from '../services/crud.interface';
 import { userSchema } from '../middlewares/user.validation';
+import { User } from '../entities/user.entity';
 import { validator } from '../index';
 
 import { CrudController } from './crud.interface';
@@ -18,16 +27,14 @@ export class UserController implements CrudController {
     const { login, password, age } = request.body;
 
     try {
-      const user: TRawUser = {
-        login,
-        password,
-        age,
-      };
-      const id = await this.userService.create(user);
+      const defaultIsDeleted = false;
+      const userToCreate = new User(login, password, age, defaultIsDeleted);
+      const id = await this.userService.create(userToCreate);
       response.location(`/api/users/${id}`).sendStatus(STATUS_CODE.CREATED);
     } catch (error) {
       response.status(STATUS_CODE.BAD_REQUEST).json({ error: error.message });
     }
+
   }
 
   @httpGet('/')
@@ -60,13 +67,8 @@ export class UserController implements CrudController {
     const { login, password, age } = request.body;
 
     try {
-      const user: TRawUser = {
-        login,
-        password,
-        age,
-      };
-
-      await this.userService.update(+id, user);
+      const userToUpdate = new User(login, password, age);
+      await this.userService.update(+id, userToUpdate);
       response.sendStatus(STATUS_CODE.NO_DATA);
     } catch (error) {
       response.status(STATUS_CODE.BAD_REQUEST).json({ error: error.message });

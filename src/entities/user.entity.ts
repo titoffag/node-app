@@ -32,4 +32,11 @@ export class User implements IUser {
     name: 'isdeleted',
   })
   isDeleted: boolean;
+
+  constructor(login: string, password: string, age: number, isDeleted?: boolean) {
+    this.login = login;
+    this.password = password;
+    this.age = age;
+    this.isDeleted = isDeleted;
+  }
 }

@@ -1,14 +1,15 @@
-import { IUser } from '../entities/user.entity';
-import { TRawUser } from '../constants';
+import { IUser, User } from '../entities/user.entity';
 
 export interface CrudRepository {
   getById(id: number): Promise<IUser>;
 
-  create(user: TRawUser): Promise<number>;
+  create(userToCreate: User): Promise<number>;
 
-  update(id: number, updatedUser: TRawUser): Promise<void>;
+  update(id: number, userToUpdate: User): Promise<void>;
 
   getAutoSuggest(loginSubstring: string, limit: number): Promise<IUser[]>;
 
-  remove(id: number): Promise<void>;
+  softRemove(id: number): Promise<void>;
+
+  hardRemove(id: number): Promise<void>;
 }

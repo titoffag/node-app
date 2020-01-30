@@ -1,7 +1,7 @@
 import { inject, injectable } from 'inversify';
 
-import { IUser } from '../entities/user.entity';
-import { DI_TOKEN, TRawUser } from '../constants';
+import { IUser, User } from '../entities/user.entity';
+import { DI_TOKEN } from '../constants';
 import { CrudRepository } from '../repositories/crud.interface';
 
 import { CrudService } from './crud.interface';
@@ -14,12 +14,12 @@ export class UserService implements CrudService {
     return this.userRepository.getById(id);
   }
 
-  async create(user: TRawUser): Promise<number> {
-    return this.userRepository.create(user);
+  async create(userToCreate: User): Promise<number> {
+    return this.userRepository.create(userToCreate);
   }
 
-  async update(id: number, updatedUser: TRawUser): Promise<void> {
-    return this.userRepository.update(id, updatedUser);
+  async update(id: number, userToUpdate: User): Promise<void> {
+    return this.userRepository.update(id, userToUpdate);
   }
 
   async getAutoSuggest(loginSubstring: string, limit: number): Promise<IUser[]> {
@@ -27,6 +27,6 @@ export class UserService implements CrudService {
   }
 
   async remove(id: number): Promise<void> {
-    return this.userRepository.remove(id);
+    return this.userRepository.softRemove(id);
   }
 }
