@@ -1,16 +1,20 @@
-CREATE TABLE users (
-    id INT PRIMARY KEY,
+create schema "node";
+
+CREATE TABLE "node".users (
+    id SERIAL PRIMARY KEY,
     login VARCHAR (255) UNIQUE NOT NULL,
     password VARCHAR (255) NOT NULL,
     age NUMERIC NOT NULL CHECK (age >= 4 AND age <= 130),
-    isDeleted BOOLEAN NOT NULL
+    isdeleted BOOLEAN NOT NULL
 );
 
-INSERT INTO users (
+SELECT * FROM "node".users;
+
+INSERT INTO "node".users (
     login,
     password,
     age,
-    isDeleted
+    isdeleted
 )
 VALUES (
     'tim-cook@apple.com',

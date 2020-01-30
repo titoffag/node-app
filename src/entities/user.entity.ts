@@ -1,7 +1,15 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity()
-export class UserEntity {
+export interface IUser {
+  id: number;
+  login: string;
+  password: string;
+  age: number;
+  isDeleted: boolean;
+}
+
+@Entity({ name: 'users' })
+export class User implements IUser {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -20,6 +28,8 @@ export class UserEntity {
   @Column()
   age: number;
 
-  @Column()
+  @Column({
+    name: 'isdeleted',
+  })
   isDeleted: boolean;
 }

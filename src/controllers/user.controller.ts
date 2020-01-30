@@ -47,7 +47,7 @@ export class UserController implements CrudController {
     const { id } = request.params;
 
     try {
-      const user = await this.userService.getById(id);
+      const user = await this.userService.getById(+id);
       response.status(STATUS_CODE.OK).json(user);
     } catch (error) {
       response.status(STATUS_CODE.BAD_REQUEST).json({ error: error.message });
@@ -66,7 +66,7 @@ export class UserController implements CrudController {
         age,
       };
 
-      await this.userService.update(id, user);
+      await this.userService.update(+id, user);
       response.sendStatus(STATUS_CODE.NO_DATA);
     } catch (error) {
       response.status(STATUS_CODE.BAD_REQUEST).json({ error: error.message });
@@ -78,7 +78,7 @@ export class UserController implements CrudController {
     const { id } = request.params;
 
     try {
-      await this.userService.remove(id);
+      await this.userService.remove(+id);
       response.sendStatus(STATUS_CODE.NO_DATA);
     } catch (error) {
       response.status(STATUS_CODE.BAD_REQUEST).json({ error: error.message });

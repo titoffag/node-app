@@ -1,14 +1,8 @@
-export interface IUser {
-  id: string;
-  login: string;
-  password: string;
-  age: number;
-  isDeleted: boolean;
-}
+import { IUser } from '../entities/user.entity';
 
-export class User implements IUser {
+export class TUser implements IUser {
   constructor(
-    public id: string,
+    public id: number,
     public login: string,
     public password: string,
     public age: number,

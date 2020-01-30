@@ -1,14 +1,14 @@
-import { IUser } from '../models/user.model';
+import { IUser } from '../entities/user.entity';
 import { TRawUser } from '../constants';
 
 export interface CrudService {
-  getById(id: string): Promise<IUser>;
+  getById(id: number): Promise<IUser>;
 
-  create(user: TRawUser): Promise<string>;
+  create(user: TRawUser): Promise<number>;
 
-  update(id: string, updatedUser: TRawUser): Promise<void>;
+  update(id: number, updatedUser: TRawUser): Promise<void>;
 
   getAutoSuggest(loginSubstring: string, limit: number): Promise<IUser[]>;
 
-  remove(id: string): Promise<void>;
+  remove(id: number): Promise<void>;
 }
