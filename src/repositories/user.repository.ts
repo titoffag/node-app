@@ -33,7 +33,6 @@ export class UserRepository extends AbstractRepository<User> implements CrudRepo
       user.login.toLowerCase() >= nextUser.login.toLowerCase() ? 1 : -1;
     const byLoginSubstring = (user: IUser) => user.login.includes(loginSubstring);
 
-    // TODO: по идеи на базе должно фильтроваться и сортировтаься
     const users = await this.repository.find({});
 
     return users
