@@ -1,11 +1,11 @@
 import createError from 'http-errors';
 import { AbstractRepository, EntityRepository } from 'typeorm';
 
-import { User, IUser } from '../entities/user.entity';
 import { STATUS_CODE } from '../constants';
 import { isDefined } from '../tools';
+import { CrudRepository } from '../interfaces/crud-repository.interface';
 
-import { CrudRepository } from './crud.interface';
+import { User, IUser } from './user.entity';
 
 @EntityRepository(User)
 export class UserRepository extends AbstractRepository<User> implements CrudRepository {

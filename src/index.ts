@@ -8,15 +8,15 @@ import cors from 'cors';
 import helmet from 'helmet';
 
 import { DI_TOKEN } from './constants';
-import { CrudService } from './services/crud.interface';
-import { UserService } from './services/user.service';
-import { CrudRepository } from './repositories/crud.interface';
-import { UserRepository } from './repositories/user.repository';
-import { User } from './entities/user.entity';
+import { CrudService } from './interfaces/crud-service.interface';
+import { UserService } from './users/user.service';
+import { CrudRepository } from './interfaces/crud-repository.interface';
+import { UserRepository } from './users/user.repository';
+import { User } from './users/user.entity';
 
 export const validator = expressJoi.createValidator();
 
-import './controllers/user.controller';
+import './users/user.controller';
 
 export const container = new Container();
 

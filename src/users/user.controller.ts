@@ -11,13 +11,13 @@ import {
 } from 'inversify-express-utils';
 
 import { DI_TOKEN, STATUS_CODE } from '../constants';
-import { CrudService } from '../services/crud.interface';
+import { CrudService } from '../interfaces/crud-service.interface';
 import { userSchema } from '../middlewares/user.validation';
-import { User } from '../entities/user.entity';
+import { CrudController } from '../interfaces/crud-controller.interface';
+import { httpTryCatch } from '../tools';
 import { validator } from '../index';
 
-import { CrudController } from './crud.interface';
-import { httpTryCatch } from '../tools';
+import { User } from './user.entity';
 
 @controller('/users')
 export class UserController implements CrudController {

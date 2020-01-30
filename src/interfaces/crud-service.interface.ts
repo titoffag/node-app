@@ -1,4 +1,4 @@
-import { IUser, User } from '../entities/user.entity';
+import { IUser, User } from '../users/user.entity';
 
 export interface CrudService {
   getById(id: number): Promise<IUser>;

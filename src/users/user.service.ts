@@ -1,10 +1,10 @@
 import { inject, injectable } from 'inversify';
 
-import { IUser, User } from '../entities/user.entity';
 import { DI_TOKEN } from '../constants';
-import { CrudRepository } from '../repositories/crud.interface';
+import { CrudRepository } from '../interfaces/crud-repository.interface';
+import { CrudService } from '../interfaces/crud-service.interface';
 
-import { CrudService } from './crud.interface';
+import { IUser, User } from './user.entity';
 
 @injectable()
 export class UserService implements CrudService {
