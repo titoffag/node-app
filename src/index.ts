@@ -9,14 +9,13 @@ import helmet from 'helmet';
 
 import { DI_TOKEN } from './constants';
 import { CrudService } from './interfaces/crud-service.interface';
-import { UserService } from './users/user.service';
+import { UserService } from './features/users/user.service';
 import { CrudRepository } from './interfaces/crud-repository.interface';
-import { UserRepository } from './users/user.repository';
-import { User } from './users/user.entity';
+import { UserRepository } from './features/users/user.repository';
+import { User } from './features/users/user.entity';
+import './features/users/user.controller';
 
 export const validator = expressJoi.createValidator();
-
-import './users/user.controller';
 
 export const container = new Container();
 

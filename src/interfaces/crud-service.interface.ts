@@ -1,13 +1,11 @@
-import { IUser, User } from '../users/user.entity';
-
 export interface CrudService {
-  getById(id: number): Promise<IUser>;
+  getById(id: number): Promise<any>;
 
-  create(userToCreate: User): Promise<number>;
+  create(objectToCreate: any): Promise<number>;
 
-  update(id: number, userToUpdate: User): Promise<void>;
+  update(id: number, objectToUpdate: any): Promise<void>;
 
-  getAutoSuggest(loginSubstring: string, limit: number): Promise<IUser[]>;
+  getAutoSuggest(loginSubstring: string, limit: number): Promise<any[]>;
 
   remove(id: number): Promise<void>;
 }

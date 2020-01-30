@@ -1,21 +1,13 @@
 import { Request, Response } from 'express';
 import { inject } from 'inversify';
-import {
-  controller,
-  httpDelete,
-  httpGet,
-  httpPost,
-  httpPut,
-  request,
-  response,
-} from 'inversify-express-utils';
+import { controller, httpDelete, httpGet, httpPost, httpPut, request, response } from 'inversify-express-utils';
 
-import { DI_TOKEN, STATUS_CODE } from '../constants';
-import { CrudService } from '../interfaces/crud-service.interface';
-import { userSchema } from '../middlewares/user.validation';
-import { CrudController } from '../interfaces/crud-controller.interface';
-import { httpTryCatch } from '../tools';
-import { validator } from '../index';
+import { DI_TOKEN, STATUS_CODE } from '../../constants';
+import { CrudService } from '../../interfaces/crud-service.interface';
+import { userSchema } from '../../middlewares/user.validation';
+import { CrudController } from '../../interfaces/crud-controller.interface';
+import { httpTryCatch } from '../../tools';
+import { validator } from '../../index';
 
 import { User } from './user.entity';
 

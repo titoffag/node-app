@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Check, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 export interface IUser {
   id: number;
@@ -24,8 +24,8 @@ export class User implements IUser {
   })
   password: string;
 
-  // TODO: check (age >= 4 AND age <= 130)
   @Column()
+  @Check(`"age" >= 4 "AND" age <= 130`)
   age: number;
 
   @Column({

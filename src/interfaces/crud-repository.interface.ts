@@ -1,13 +1,11 @@
-import { IUser, User } from '../users/user.entity';
-
 export interface CrudRepository {
-  getById(id: number): Promise<IUser>;
+  getById(id: number): Promise<any>;
 
-  create(userToCreate: User): Promise<number>;
+  create(entityToCreate: any): Promise<number>;
 
-  update(id: number, userToUpdate: User): Promise<void>;
+  update(id: number, entityToUpdate: any): Promise<void>;
 
-  getAutoSuggest(loginSubstring: string, limit: number): Promise<IUser[]>;
+  getAutoSuggest(loginSubstring: string, limit: number): Promise<any[]>;
 
   softRemove(id: number): Promise<void>;
 
