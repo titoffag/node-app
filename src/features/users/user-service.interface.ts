@@ -1,4 +1,4 @@
-export interface CrudService {
+export interface UserService {
   getById(id: number): Promise<any>;
 
   create(objectToCreate: any): Promise<number>;

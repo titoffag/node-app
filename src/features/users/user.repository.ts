@@ -3,12 +3,12 @@ import { AbstractRepository, EntityRepository } from 'typeorm';
 
 import { STATUS_CODE } from '../../constants';
 import { isDefined } from '../../tools';
-import { CrudRepository } from '../../interfaces/crud-repository.interface';
 
+import { UserRepository } from './user-repository.interface';
 import { IUser, User } from './user.entity';
 
 @EntityRepository(User)
-export class UserRepository extends AbstractRepository<User> implements CrudRepository {
+export class UserRepositoryImpl extends AbstractRepository<User> implements UserRepository {
   async getById(id: number): Promise<IUser> {
     const foundUser = await this.repository.findOne(id);
 

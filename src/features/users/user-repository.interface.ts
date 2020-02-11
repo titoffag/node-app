@@ -1,4 +1,4 @@
-export interface CrudRepository {
+export interface UserRepository {
   getById(id: number): Promise<any>;
 
   create(entityToCreate: any): Promise<number>;

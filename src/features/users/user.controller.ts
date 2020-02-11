@@ -1,19 +1,28 @@
 import { Request, Response } from 'express';
 import { inject } from 'inversify';
-import { controller, httpDelete, httpGet, httpPost, httpPut, request, response } from 'inversify-express-utils';
+import {
+  all,
+  controller,
+  httpDelete,
+  httpGet,
+  httpPost,
+  httpPut,
+  request,
+  response,
+} from 'inversify-express-utils';
 
 import { DI_TOKEN, STATUS_CODE } from '../../constants';
-import { CrudService } from '../../interfaces/crud-service.interface';
-import { userSchema } from '../../middlewares/user.validation';
-import { CrudController } from '../../interfaces/crud-controller.interface';
+import { userSchema } from '../../middlewares';
 import { httpTryCatch } from '../../tools';
 import { validator } from '../../index';
 
+import { UserController } from './user-controller.interface';
+import { UserService } from './user-service.interface';
 import { User } from './user.entity';
 
 @controller('/users')
-export class UserController implements CrudController {
-  @inject(DI_TOKEN.UserService) private readonly userService: CrudService;
+export class UserControllerImpl implements UserController {
+  @inject(DI_TOKEN.UserService) private readonly userService: UserService;
 
   @httpTryCatch
   @httpPost('/', validator.body(userSchema))
@@ -62,5 +71,22 @@ export class UserController implements CrudController {
 
     await this.userService.remove(+id);
     response.sendStatus(STATUS_CODE.NO_DATA);
+  }
+
+  @all('')
+  async methodNotAllowed(@request() request: Request, @response() response: Response) {
+    const {
+      route: { methods, path },
+      method,
+    } = request;
+    const allowedMethods = Object.keys(methods)
+      .filter(method => method !== '_all')
+      .map(key => key.toUpperCase())
+      .join(', ') || 'GET, POST, PUT, DELETE';
+
+    const message = `Unsupported method ${method} applied at ${path}. Allowed methods: ${allowedMethods}`;
+    console.log(message);
+
+    response.header('Allow', allowedMethods).sendStatus(STATUS_CODE.METHOD_NOT_ALLOWED);
   }
 }

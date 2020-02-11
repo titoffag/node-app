@@ -1,8 +1,4 @@
-import { STATUS_CODE } from './constants';
-
-export function isDefined<T>(value: T): boolean {
-  return value !== undefined && value !== null;
-}
+import { STATUS_CODE } from '../constants';
 
 export function httpTryCatch(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
   const originalMethod = descriptor.value;
@@ -11,7 +7,7 @@ export function httpTryCatch(target: any, propertyKey: string, descriptor: Prope
     try {
       return await originalMethod.apply(this, args);
     } catch (error) {
-      const [request, response] = args;
+      const [, response] = args;
 
       response.status(STATUS_CODE.BAD_REQUEST).json({ error: error.message });
     }
