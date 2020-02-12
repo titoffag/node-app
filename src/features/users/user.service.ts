@@ -27,6 +27,6 @@ export class UserServiceImpl implements UserService {
   }
 
   async remove(id: number): Promise<void> {
-    return this.userRepository.softRemove(id);
+    return this.userRepository.hardRemove(id);
   }
 }
