@@ -1,6 +1,7 @@
 import { createConnection } from 'typeorm';
 
 import { User } from '../features/users';
+import { Group } from '../features/groups';
 
 export async function typeOrmLoader(callback: () => void) {
   await createConnection({
@@ -11,9 +12,7 @@ export async function typeOrmLoader(callback: () => void) {
     password: '12345678',
     database: 'db',
     schema: 'node',
-    entities: [
-      User
-    ],
+    entities: [User, Group],
   });
 
   callback();

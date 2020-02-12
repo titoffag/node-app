@@ -19,26 +19,31 @@ export class UserRepositoryImpl extends AbstractRepository<User> implements User
     return foundUser;
   }
 
-  async create(userToCreate: User): Promise<number> {
+  async create(userToCreate: IUser): Promise<number> {
     const createdUser = await this.repository.save(userToCreate);
 
     return createdUser.id;
   }
 
-  async update(id: number, userToUpdate: User): Promise<void> {
+  async update(id: number, userToUpdate: IUser): Promise<void> {
     await this.repository.update(id, userToUpdate);
   }
+
   async getAutoSuggest(loginSubstring: string, limit: number): Promise<IUser[]> {
     const byLoginProperty = (user: IUser, nextUser: IUser) =>
       user.login.toLowerCase() >= nextUser.login.toLowerCase() ? 1 : -1;
     const byLoginSubstring = (user: IUser) => user.login.includes(loginSubstring);
 
-    const users = await this.repository.find({});
+    const users = await this.repository.find();
 
     return users
       .sort(byLoginProperty)
       .filter(byLoginSubstring)
       .slice(0, limit);
+  }
+
+  async   getByIds(userIds: number[]): Promise<IUser[]> {
+    return await this.repository.findByIds(userIds);
   }
 
   async softRemove(id: number): Promise<void> {

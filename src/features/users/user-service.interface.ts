@@ -1,9 +1,11 @@
+import { IUser } from './user.entity';
+
 export interface UserService {
   getById(id: number): Promise<any>;
 
-  create(objectToCreate: any): Promise<number>;
+  create(objectToCreate: IUser): Promise<number>;
 
-  update(id: number, objectToUpdate: any): Promise<void>;
+  update(id: number, objectToUpdate: IUser): Promise<void>;
 
   getAutoSuggest(loginSubstring: string, limit: number): Promise<any[]>;
 

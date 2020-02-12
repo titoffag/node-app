@@ -32,7 +32,7 @@ export class UserControllerImpl implements UserController {
     const defaultIsDeleted = false;
     const userToCreate = new User(login, password, age, defaultIsDeleted);
     const id = await this.userService.create(userToCreate);
-    response.location(`/api/users/${id}`).sendStatus(STATUS_CODE.CREATED);
+    response.location(`/users/${id}`).sendStatus(STATUS_CODE.CREATED);
   }
 
   @httpTryCatch
@@ -73,7 +73,7 @@ export class UserControllerImpl implements UserController {
     response.sendStatus(STATUS_CODE.NO_DATA);
   }
 
-  @all('')
+  @all('**')
   async methodNotAllowed(@request() request: Request, @response() response: Response) {
     const {
       route: { methods, path },
