@@ -12,13 +12,13 @@ import {
 } from 'inversify-express-utils';
 
 import { DI_TOKEN, STATUS_CODE } from '../../constants';
-import { userSchema } from '../../middlewares';
 import { httpTryCatch } from '../../tools';
-import { validator } from '../../index';
+import { validator } from '../../tools/validator';
 
 import { UserController } from './user-controller.interface';
 import { UserService } from './user-service.interface';
 import { User } from './user.entity';
+import { userSchema } from './user.validation';
 
 @controller('/users')
 export class UserControllerImpl implements UserController {

@@ -1,7 +1,6 @@
 import 'reflect-metadata';
-import expressJoi from 'express-joi-validation';
 
-export const validator = expressJoi.createValidator();
+import './tools/validator';
 
 import './features/users/user.controller';
 import './features/groups/group.controller';
