@@ -9,6 +9,6 @@ export async function initializeLoaders() {
 
   const diContainer = inversifyLoader();
 
-  await typeOrmLoader(() => console.log('Type ORM Initialized'));
-  await expressLoader(diContainer,() => console.log('Express Initialized'));
+  await typeOrmLoader(() => console.log('Type ORM initialized'));
+  await expressLoader(diContainer,(port) => console.log(`Express initialized and listening on port ${port}`));
 }

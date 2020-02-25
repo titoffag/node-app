@@ -13,4 +13,4 @@ async function startServer() {
 
 startServer();
 
-// process.on('uncaughtException', () => console.log('uncaughtException'));
+process.on('uncaughtException', () => console.log('uncaughtException'));

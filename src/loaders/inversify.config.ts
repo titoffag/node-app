@@ -15,4 +15,4 @@ export function inversifyLoader(): Container {
   container.bind<GroupRepository>(DI_TOKEN.GroupRepository).toDynamicValue(() => getCustomRepository(GroupRepositoryImpl));
 
   return container;
-}
+} 
