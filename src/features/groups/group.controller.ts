@@ -15,13 +15,12 @@ import { DI_TOKEN, STATUS_CODE } from '../../constants';
 import { httpTryCatch } from '../../tools';
 import { validator } from '../../tools/validator';
 
-import { GroupController } from './group-controller.interface';
 import { GroupService } from './group-service.interface';
 import { Group } from './group.entity';
 import { groupSchema } from './group.validation';
 
 @controller('/groups')
-export class GroupControllerImpl implements GroupController {
+export class GroupControllerImpl {
   @inject(DI_TOKEN.GroupService) private readonly groupService: GroupService;
 
   @httpTryCatch

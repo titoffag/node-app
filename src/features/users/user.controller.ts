@@ -9,19 +9,19 @@ import {
   httpPut,
   request,
   response,
+  BaseHttpController
 } from 'inversify-express-utils';
 
 import { DI_TOKEN, STATUS_CODE } from '../../constants';
 import { httpTryCatch } from '../../tools';
 import { validator } from '../../tools/validator';
 
-import { UserController } from './user-controller.interface';
 import { UserService } from './user-service.interface';
 import { User } from './user.entity';
 import { userSchema } from './user.validation';
 
 @controller('/users')
-export class UserControllerImpl implements UserController {
+export class UserControllerImpl {
   @inject(DI_TOKEN.UserService) private readonly userService: UserService;
 
   @httpTryCatch
