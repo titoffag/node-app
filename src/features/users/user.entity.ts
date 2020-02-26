@@ -25,7 +25,7 @@ export class User implements IUser {
   password: string;
 
   @Column()
-  @Check(`"age" >= 4 "AND" age <= 130`)
+  @Check(`"age" >= 4 "AND" "age" <= 130`)
   age: number;
 
   @Column({
