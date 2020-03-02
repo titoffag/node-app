@@ -39,6 +39,7 @@ export class GroupRepositoryImpl extends AbstractRepository<Group> implements Gr
   }
 
   async addUsersToGroup(groupId: number, users: IUser[]): Promise<void> {
+    // todo: 1 sql select
     await this.manager.transaction(async transactionManager => {
       if (users.length === 0) {
         throw new Error('Cannot found users by given user ids');

@@ -1,13 +1,13 @@
 import { IGroup } from './group.entity';
 
 export interface GroupService {
-  getById(id: number): Promise<any>;
+  getById(id: number): Promise<IGroup>;
 
   create(objectToCreate: IGroup): Promise<number>;
 
   update(id: number, objectToUpdate: IGroup): Promise<void>;
 
-  getAll(): Promise<any[]>;
+  getAll(): Promise<IGroup[]>;
 
   remove(id: number): Promise<void>;
 

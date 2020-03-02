@@ -20,7 +20,7 @@ import { Group } from './group.entity';
 import { groupSchema } from './group.validation';
 
 @controller('/groups')
-export class GroupControllerImpl {
+export class GroupController {
   @inject(DI_TOKEN.GroupService) private readonly groupService: GroupService;
 
   @httpTryCatch

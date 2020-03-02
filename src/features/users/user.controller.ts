@@ -9,7 +9,7 @@ import {
   httpPut,
   request,
   response,
-  BaseHttpController
+  // BaseHttpController
 } from 'inversify-express-utils';
 
 import { DI_TOKEN, STATUS_CODE } from '../../constants';
@@ -21,7 +21,7 @@ import { User } from './user.entity';
 import { userSchema } from './user.validation';
 
 @controller('/users')
-export class UserControllerImpl {
+export class UserController {
   @inject(DI_TOKEN.UserService) private readonly userService: UserService;
 
   @httpTryCatch
@@ -75,6 +75,7 @@ export class UserControllerImpl {
 
   @all('**')
   async methodNotAllowed(@request() request: Request, @response() response: Response) {
+  // todo: this method to abstract base controller
     const {
       route: { methods, path },
       method,
