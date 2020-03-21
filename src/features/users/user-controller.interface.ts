@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 
-export interface CrudController {
+export interface UserController {
   create(request: Request, response: Response): void;
 
   getById(request: Request, response: Response): void;
