@@ -1,8 +1,10 @@
 import 'reflect-metadata';
-import expressJoi from 'express-joi-validation';
 
-export const validator = expressJoi.createValidator();
+import './tools/validator';
+
 import './features/users/user.controller';
+import './features/groups/group.controller';
+
 import { initializeLoaders } from './loaders';
 
 async function startServer() {
@@ -10,3 +12,5 @@ async function startServer() {
 }
 
 startServer();
+
+// process.on('uncaughtException', () => console.log('uncaughtException'));

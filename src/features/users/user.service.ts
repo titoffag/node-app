@@ -4,7 +4,7 @@ import { DI_TOKEN } from '../../constants';
 
 import { UserService } from './user-service.interface';
 import { UserRepository } from './user-repository.interface';
-import { IUser, User } from './user.entity';
+import { IUser } from './user.entity';
 
 @injectable()
 export class UserServiceImpl implements UserService {
@@ -14,11 +14,11 @@ export class UserServiceImpl implements UserService {
     return this.userRepository.getById(id);
   }
 
-  async create(userToCreate: User): Promise<number> {
+  async create(userToCreate: IUser): Promise<number> {
     return this.userRepository.create(userToCreate);
   }
 
-  async update(id: number, userToUpdate: User): Promise<void> {
+  async update(id: number, userToUpdate: IUser): Promise<void> {
     return this.userRepository.update(id, userToUpdate);
   }
 
@@ -27,6 +27,6 @@ export class UserServiceImpl implements UserService {
   }
 
   async remove(id: number): Promise<void> {
-    return this.userRepository.softRemove(id);
+    return this.userRepository.hardRemove(id);
   }
 }

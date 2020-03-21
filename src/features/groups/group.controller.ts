@@ -15,33 +15,30 @@ import { DI_TOKEN, STATUS_CODE } from '../../constants';
 import { httpTryCatch } from '../../tools';
 import { validator } from '../../tools/validator';
 
-import { UserController } from './user-controller.interface';
-import { UserService } from './user-service.interface';
-import { User } from './user.entity';
-import { userSchema } from './user.validation';
+import { GroupController } from './group-controller.interface';
+import { GroupService } from './group-service.interface';
+import { Group } from './group.entity';
+import { groupSchema } from './group.validation';
 
-@controller('/users')
-export class UserControllerImpl implements UserController {
-  @inject(DI_TOKEN.UserService) private readonly userService: UserService;
+@controller('/groups')
+export class GroupControllerImpl implements GroupController {
+  @inject(DI_TOKEN.GroupService) private readonly groupService: GroupService;
 
   @httpTryCatch
-  @httpPost('/', validator.body(userSchema))
+  @httpPost('/', validator.body(groupSchema))
   async create(@request() request: Request, @response() response: Response) {
-    const { login, password, age } = request.body;
+    const { name, permissions } = request.body;
 
-    const defaultIsDeleted = false;
-    const userToCreate = new User(login, password, age, defaultIsDeleted);
-    const id = await this.userService.create(userToCreate);
-    response.location(`/users/${id}`).sendStatus(STATUS_CODE.CREATED);
+    const groupToCreate = new Group(name, permissions);
+    const id = await this.groupService.create(groupToCreate);
+    response.location(`/groups/${id}`).sendStatus(STATUS_CODE.CREATED);
   }
 
   @httpTryCatch
   @httpGet('/')
-  async getAutoSuggest(@request() request: Request, @response() response: Response) {
-    const { loginSubstring = '', limit = 5 } = request.query;
-
-    const suggestedUsers = await this.userService.getAutoSuggest(loginSubstring, +limit);
-    response.status(STATUS_CODE.OK).json(suggestedUsers);
+  async getAll(@request() request: Request, @response() response: Response) {
+    const groups = await this.groupService.getAll();
+    response.status(STATUS_CODE.OK).json(groups);
   }
 
   @httpTryCatch
@@ -49,18 +46,18 @@ export class UserControllerImpl implements UserController {
   async getById(@request() request: Request, @response() response: Response) {
     const { id } = request.params;
 
-    const user = await this.userService.getById(+id);
-    response.status(STATUS_CODE.OK).json(user);
+    const group = await this.groupService.getById(+id);
+    response.status(STATUS_CODE.OK).json(group);
   }
 
   @httpTryCatch
-  @httpPut('/:id', validator.body(userSchema))
+  @httpPut('/:id', validator.body(groupSchema))
   async update(@request() request: Request, @response() response: Response) {
     const { id } = request.params;
-    const { login, password, age } = request.body;
+    const { name, permissions } = request.body;
 
-    const userToUpdate = new User(login, password, age);
-    await this.userService.update(+id, userToUpdate);
+    const groupToUpdate = new Group(name, permissions);
+    await this.groupService.update(+id, groupToUpdate);
     response.sendStatus(STATUS_CODE.NO_DATA);
   }
 
@@ -69,7 +66,17 @@ export class UserControllerImpl implements UserController {
   async remove(@request() request: Request, @response() response: Response) {
     const { id } = request.params;
 
-    await this.userService.remove(+id);
+    await this.groupService.remove(+id);
+    response.sendStatus(STATUS_CODE.NO_DATA);
+  }
+
+  @httpTryCatch
+  @httpPut('/:id/add-users')
+  async addUsersToGroup(@request() request: Request, @response() response: Response) {
+    const { id } = request.params;
+    const { userIds } = request.body;
+
+    await this.groupService.addUsersToGroup(+id, userIds);
     response.sendStatus(STATUS_CODE.NO_DATA);
   }
 

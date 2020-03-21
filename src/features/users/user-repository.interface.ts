@@ -1,11 +1,15 @@
+import { IUser } from './user.entity';
+
 export interface UserRepository {
   getById(id: number): Promise<any>;
 
-  create(entityToCreate: any): Promise<number>;
+  create(entityToCreate: IUser): Promise<number>;
 
-  update(id: number, entityToUpdate: any): Promise<void>;
+  update(id: number, entityToUpdate: IUser): Promise<void>;
 
-  getAutoSuggest(loginSubstring: string, limit: number): Promise<any[]>;
+  getAutoSuggest(loginSubstring: string, limit: number): Promise<IUser[]>;
+
+  getByIds(userIds: number[]): Promise<IUser[]>;
 
   softRemove(id: number): Promise<void>;
 

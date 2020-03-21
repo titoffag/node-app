@@ -9,7 +9,7 @@ export function httpTryCatch(target: any, propertyKey: string, descriptor: Prope
     } catch (error) {
       const [, response] = args;
 
-      response.status(STATUS_CODE.BAD_REQUEST).json({ error: error.message });
+      response.status(STATUS_CODE.INTERNAL_SERVER_ERROR).json({ error: error.message });
     }
   };
 
