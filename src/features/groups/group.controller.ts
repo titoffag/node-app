@@ -12,8 +12,7 @@ import {
 } from 'inversify-express-utils';
 
 import { DI_TOKEN, STATUS_CODE } from '../../constants';
-import { httpTryCatch } from '../../tools';
-import { validator } from '../../tools/validator';
+import { validator } from '../../tools';
 
 import { GroupService } from './group-service.interface';
 import { Group } from './group.entity';
@@ -23,7 +22,6 @@ import { groupSchema } from './group.validation';
 export class GroupController {
   @inject(DI_TOKEN.GroupService) private readonly groupService: GroupService;
 
-  @httpTryCatch
   @httpPost('/', validator.body(groupSchema))
   async create(@request() request: Request, @response() response: Response) {
     const { name, permissions } = request.body;
@@ -33,14 +31,12 @@ export class GroupController {
     response.location(`/groups/${id}`).sendStatus(STATUS_CODE.CREATED);
   }
 
-  @httpTryCatch
   @httpGet('/')
   async getAll(@request() request: Request, @response() response: Response) {
     const groups = await this.groupService.getAll();
     response.status(STATUS_CODE.OK).json(groups);
   }
 
-  @httpTryCatch
   @httpGet('/:id')
   async getById(@request() request: Request, @response() response: Response) {
     const { id } = request.params;
@@ -49,7 +45,6 @@ export class GroupController {
     response.status(STATUS_CODE.OK).json(group);
   }
 
-  @httpTryCatch
   @httpPut('/:id', validator.body(groupSchema))
   async update(@request() request: Request, @response() response: Response) {
     const { id } = request.params;
@@ -60,7 +55,6 @@ export class GroupController {
     response.sendStatus(STATUS_CODE.NO_DATA);
   }
 
-  @httpTryCatch
   @httpDelete('/:id')
   async remove(@request() request: Request, @response() response: Response) {
     const { id } = request.params;
@@ -69,7 +63,6 @@ export class GroupController {
     response.sendStatus(STATUS_CODE.NO_DATA);
   }
 
-  @httpTryCatch
   @httpPut('/:id/add-users')
   async addUsersToGroup(@request() request: Request, @response() response: Response) {
     const { id } = request.params;
@@ -81,6 +74,7 @@ export class GroupController {
 
   @all('**')
   async methodNotAllowed(@request() request: Request, @response() response: Response) {
+    // todo: this method to abstract base controller
     const {
       route: { methods, path },
       method,

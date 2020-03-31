@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 
-import './tools/validator';
+import { logger } from './tools';
 
 import './features/users/user.controller';
 import './features/groups/group.controller';
@@ -13,4 +13,12 @@ async function startServer() {
 
 startServer();
 
-process.on('uncaughtException', () => console.log('uncaughtException'));
+process
+  .on('unhandledRejection', (reason: number, promise: Promise<any>) => {
+    logger.error(`Unhandled rejection of promise: ${JSON.stringify(promise)} by reason: ${reason}`);
+    process.exit(1);
+  })
+  .on('uncaughtException', (error: Error) => {
+    logger.error(`Uncaught exception: ${error}`);
+    process.exit(1);
+  });

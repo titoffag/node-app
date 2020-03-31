@@ -11,20 +11,22 @@ import {
   response,
   // BaseHttpController
 } from 'inversify-express-utils';
+import passport from 'passport';
+// import { Strategy } from 'passport-local';
 
 import { DI_TOKEN, STATUS_CODE } from '../../constants';
-import { httpTryCatch } from '../../tools';
-import { validator } from '../../tools/validator';
+import { httpTryCatch, validator } from '../../tools';
 
 import { UserService } from './user-service.interface';
+import { AuthService } from './auth-service.interface';
 import { User } from './user.entity';
 import { userSchema } from './user.validation';
 
 @controller('/users')
 export class UserController {
   @inject(DI_TOKEN.UserService) private readonly userService: UserService;
+  @inject(DI_TOKEN.AuthService) private readonly authService: AuthService;
 
-  @httpTryCatch
   @httpPost('/', validator.body(userSchema))
   async create(@request() request: Request, @response() response: Response) {
     const { login, password, age } = request.body;
@@ -39,12 +41,12 @@ export class UserController {
   @httpGet('/')
   async getAutoSuggest(@request() request: Request, @response() response: Response) {
     const { loginSubstring = '', limit = 5 } = request.query;
+    // todo: add offset = 0
 
     const suggestedUsers = await this.userService.getAutoSuggest(loginSubstring, +limit);
     response.status(STATUS_CODE.OK).json(suggestedUsers);
   }
 
-  @httpTryCatch
   @httpGet('/:id')
   async getById(@request() request: Request, @response() response: Response) {
     const { id } = request.params;
@@ -53,7 +55,6 @@ export class UserController {
     response.status(STATUS_CODE.OK).json(user);
   }
 
-  @httpTryCatch
   @httpPut('/:id', validator.body(userSchema))
   async update(@request() request: Request, @response() response: Response) {
     const { id } = request.params;
@@ -64,7 +65,6 @@ export class UserController {
     response.sendStatus(STATUS_CODE.NO_DATA);
   }
 
-  @httpTryCatch
   @httpDelete('/:id')
   async remove(@request() request: Request, @response() response: Response) {
     const { id } = request.params;
@@ -73,9 +73,17 @@ export class UserController {
     response.sendStatus(STATUS_CODE.NO_DATA);
   }
 
+  @httpPost('/login', passport.authenticate('local'))
+  async login(@request() request: Request, @response() response: Response) {
+    const { username, password } = request.body;
+
+    await this.authService.login(username, password);
+    response.sendStatus(STATUS_CODE.OK);
+  }
+
   @all('**')
   async methodNotAllowed(@request() request: Request, @response() response: Response) {
-  // todo: this method to abstract base controller
+    // todo: this method to abstract base controller
     const {
       route: { methods, path },
       method,

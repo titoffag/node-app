@@ -3,4 +3,5 @@ export const DI_TOKEN = {
   UserRepository: Symbol.for('UserRepository'),
   GroupService: Symbol.for('GroupService'),
   GroupRepository: Symbol.for('GroupRepository'),
+  AuthService: Symbol.for('AuthService'),
 };

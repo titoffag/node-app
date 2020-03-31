@@ -5,7 +5,7 @@ CREATE TYPE permission AS ENUM ('READ', 'WRITE', 'DELETE', 'SHARE', 'UPLOAD_FILE
 CREATE TABLE "node".groups (
     id SERIAL PRIMARY KEY,
     name VARCHAR (255) UNIQUE NOT NULL,
-    permissions permission[] NOT NULL,
+    permissions permission[] NOT NULL
 );
 
 SELECT * FROM "node".groups;

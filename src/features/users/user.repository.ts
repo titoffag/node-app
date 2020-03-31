@@ -34,7 +34,9 @@ export class UserRepositoryImpl extends AbstractRepository<User> implements User
       user.login.toLowerCase() >= nextUser.login.toLowerCase() ? 1 : -1;
     const byLoginSubstring = (user: IUser) => user.login.includes(loginSubstring);
 
-    const users = await this.repository.find(); // todo: where
+    const users = await this.repository.find(); // todo: where and iclude groups
+
+    throw new Error('Unknown error');
 
     return users
       .sort(byLoginProperty)

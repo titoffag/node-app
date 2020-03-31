@@ -1,7 +1,7 @@
 import { Container } from 'inversify';
 import { getCustomRepository } from 'typeorm';
 
-import { UserRepository, UserRepositoryImpl, UserService, UserServiceImpl } from '../features/users';
+import { UserRepository, UserRepositoryImpl, UserService, UserServiceImpl, AuthService, AuthServiceImpl } from '../features/users';
 import { GroupRepository, GroupRepositoryImpl, GroupService, GroupServiceImpl } from '../features/groups';
 import { DI_TOKEN } from '../constants';
 
@@ -13,6 +13,8 @@ export function inversifyLoader(): Container {
 
   container.bind<GroupService>(DI_TOKEN.GroupService).to(GroupServiceImpl);
   container.bind<GroupRepository>(DI_TOKEN.GroupRepository).toDynamicValue(() => getCustomRepository(GroupRepositoryImpl));
+
+  container.bind<AuthService>(DI_TOKEN.AuthService).to(AuthServiceImpl);
 
   return container;
 } 
