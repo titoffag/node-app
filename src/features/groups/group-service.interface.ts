@@ -3,7 +3,7 @@ import { IGroup } from './group.entity';
 export interface GroupService {
   getById(id: number): Promise<IGroup>;
 
-  create(objectToCreate: IGroup): Promise<number>;
+  create(objectToCreate: IGroup): Promise<IGroup>;
 
   update(id: number, objectToUpdate: IGroup): Promise<void>;
 

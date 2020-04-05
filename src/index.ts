@@ -4,6 +4,7 @@ import { logger } from './tools';
 
 import './features/users/user.controller';
 import './features/groups/group.controller';
+import './features/auth/auth.controller';
 
 import { initializeLoaders } from './loaders';
 

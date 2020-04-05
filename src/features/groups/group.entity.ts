@@ -24,6 +24,7 @@ export class Group implements IGroup {
   @Column('simple-array', { array: true })
   permissions: Array<Permission>;
 
+  // todo: make lazy loading relation
   @ManyToMany(() => User, { cascade: true })
   @JoinTable({
     name: 'groups_users',

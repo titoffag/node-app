@@ -1,4 +1,4 @@
-create schema "node";
+CREATE SCHEMA IF NOT EXISTS "node";
 
 CREATE TABLE "node".users (
     id SERIAL PRIMARY KEY,
@@ -7,8 +7,6 @@ CREATE TABLE "node".users (
     age NUMERIC NOT NULL CHECK (age >= 4 AND age <= 130),
     isdeleted BOOLEAN NOT NULL
 );
-
-SELECT * FROM "node".users;
 
 INSERT INTO "node".users (
     login,

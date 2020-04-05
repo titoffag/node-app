@@ -1,9 +1,7 @@
 import { createLogger, format, transports } from 'winston';
 
-const LOG_DIRNAME = 'logs';
-const LOG_FILE_MAX_SIZE = 5000;
+import { LOG } from '../constants';
 
-// prettyPrint
 const { combine, timestamp, label, printf, colorize } = format;
 
 const formatter = printf(({ level, message, timestamp }) => {
@@ -11,12 +9,10 @@ const formatter = printf(({ level, message, timestamp }) => {
 });
 
 const createFileTransport = (filename: string, level: string) =>
-  new transports.File({ dirname: LOG_DIRNAME, filename, level, maxsize: LOG_FILE_MAX_SIZE });
+  new transports.File({ dirname: LOG.DIRNAME, filename, level, maxsize: LOG.FILE_MAX_SIZE });
 
 const consoleLogTransport = new transports.Console({
   format: combine(colorize(), timestamp(), formatter),
-  handleExceptions: true,
-  // ???
 });
 const errorFileTransport = createFileTransport('error.log', 'error');
 const warningFileTransport = createFileTransport('warning.log', 'warn');

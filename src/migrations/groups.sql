@@ -1,4 +1,4 @@
-create schema "node";
+CREATE SCHEMA IF NOT EXISTS "node";
 
 CREATE TYPE permission AS ENUM ('READ', 'WRITE', 'DELETE', 'SHARE', 'UPLOAD_FILES');
 
@@ -8,27 +8,25 @@ CREATE TABLE "node".groups (
     permissions permission[] NOT NULL
 );
 
-SELECT * FROM "node".groups;
-
 INSERT INTO "node".groups (
     name,
     permissions
 )
 VALUES (
     'readers',
-    '{ "READ" }'
+    '"READ"'
 ), (
     'writers',
-    '{ "READ", "WRITE" }'
+    '"READ", "WRITE"'
 ), (
     'speakers',
-    '{ "READ", "SHARE" }'
+    '"READ", "SHARE"'
 ), (
     'contributors',
-    '{ "READ", "WRITE", "UPLOAD_FILES" }'
+    '"READ", "WRITE", "UPLOAD_FILES"'
 ), (
     'gods',
-    '{ "READ", "WRITE", "DELETE", "SHARE", "UPLOAD_FILES" }'
+    '"READ", "WRITE", "DELETE", "SHARE", "UPLOAD_FILES"'
 );
 
 CREATE TABLE "node".groups_users (

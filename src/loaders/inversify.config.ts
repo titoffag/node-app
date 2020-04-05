@@ -1,8 +1,9 @@
 import { Container } from 'inversify';
 import { getCustomRepository } from 'typeorm';
 
-import { UserRepository, UserRepositoryImpl, UserService, UserServiceImpl, AuthService, AuthServiceImpl } from '../features/users';
+import { UserRepository, UserRepositoryImpl, UserService, UserServiceImpl } from '../features/users';
 import { GroupRepository, GroupRepositoryImpl, GroupService, GroupServiceImpl } from '../features/groups';
+import { AuthService, AuthServiceImpl } from '../features/auth';
 import { DI_TOKEN } from '../constants';
 
 export function inversifyLoader(): Container {

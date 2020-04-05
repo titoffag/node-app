@@ -9,10 +9,16 @@ export function httpTryCatch(target: any, propertyKey: string, descriptor: Prope
     try {
       return await originalMethod.apply(this, args);
     } catch (error) {
-      const [, response] = args;
-      logger.error('Something went wrong', { error });
+      switch (error.status) {
+        case STATUS_CODE.NOT_FOUND:
+          return this.notFound();
+        case STATUS_CODE.BAD_REQUEST:
+          return this.badRequest(error.message);
+        default:
+          logger.error(`Something went wrong: ${error.message}`);
 
-      response.status(STATUS_CODE.INTERNAL_SERVER_ERROR).json({ errorMessage: 'Something went wrong' });
+          return this.internalServerError(error);
+      }
     }
   };
 

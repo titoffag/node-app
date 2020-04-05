@@ -4,11 +4,10 @@ import helmet from 'helmet';
 import compression from 'compression';
 import { Container } from 'inversify';
 import { InversifyExpressServer } from 'inversify-express-utils';
-import morgan from 'morgan';
 
-import { logHandler, errorHandler } from '../middlewares';
+import { logHandler } from '../middlewares';
 
-export async function expressLoader(di: Container, callback: (port: number) => void) {
+export async function expressLoader(di: Container) {
   const server = new InversifyExpressServer(di);
 
   server.setConfig((app: Application) => {
@@ -16,16 +15,10 @@ export async function expressLoader(di: Container, callback: (port: number) => v
     app.use(express.json());
     app.use(helmet());
     app.use(compression());
-    app.use(morgan(':method :url :status :res[content-length] - :response-time ms'));
 
-    // app.use(logHandler);
-    app.use((request: Request, response: Response, next: NextFunction) => {
-      console.log('there', request, response, next);
-      next();
-      // errorHandler()
-    });
+    app.use(logHandler);
   });
 
   const { PORT = 3001 } = process.env;
-  server.build().listen(PORT, () => callback(+PORT));
+  server.build().listen(PORT, () => console.log(`Application listening on port ${PORT}`));
 }

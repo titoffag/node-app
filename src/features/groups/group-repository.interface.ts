@@ -5,7 +5,7 @@ import { IGroup } from './group.entity';
 export interface GroupRepository {
   getById(id: number): Promise<IGroup>;
 
-  create(entityToCreate: IGroup): Promise<number>;
+  create(entityToCreate: IGroup): Promise<IGroup>;
 
   update(id: number, entityToUpdate: IGroup): Promise<void>;
 

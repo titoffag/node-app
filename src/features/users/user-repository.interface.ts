@@ -1,9 +1,9 @@
 import { IUser } from './user.entity';
 
 export interface UserRepository {
-  getById(id: number): Promise<any>;
+  getById(id: number): Promise<IUser>;
 
-  create(entityToCreate: IUser): Promise<number>;
+  create(entityToCreate: IUser): Promise<IUser>;
 
   update(id: number, entityToUpdate: IUser): Promise<void>;
 
