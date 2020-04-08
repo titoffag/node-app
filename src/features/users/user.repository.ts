@@ -9,13 +9,17 @@ import { IUser, User } from './user.entity';
 @EntityRepository(User)
 export class UserRepositoryImpl extends AbstractRepository<User> implements UserRepository {
   async getById(id: number): Promise<IUser> {
-    const foundUser = await this.repository.findOne(id);
+    try {
+      const foundUser = await this.repository.findOne(id);
 
-    if (!isDefined(foundUser)) {
-      throw new createError.NotFound('Oops! Cannot found user by given id');
+      if (!isDefined(foundUser)) {
+        throw new createError.NotFound('Oops! Cannot found user by given id');
+      }
+
+      return foundUser;
+    } catch (error) {
+      throw new createError.BadRequest(error.message);
     }
-
-    return foundUser;
   }
 
   async create(userToCreate: IUser): Promise<IUser> {

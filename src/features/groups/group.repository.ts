@@ -10,15 +10,19 @@ import { Group, IGroup } from './group.entity';
 @EntityRepository(Group)
 export class GroupRepositoryImpl extends AbstractRepository<Group> implements GroupRepository {
   async getById(id: number): Promise<IGroup> {
-    const foundUser = await this.repository.findOne(id, {
-      relations: ['users'],
-    });
+    try {
+      const foundUser = await this.repository.findOne(id, {
+        relations: ['users'],
+      });
 
-    if (!isDefined(foundUser)) {
-      throw new createError.NotFound('Oops! Cannot found user by given id');
+      if (!isDefined(foundUser)) {
+        throw new createError.NotFound('Oops! Cannot found user by given id');
+      }
+
+      return foundUser;
+    } catch (error) {
+      throw new createError.BadRequest(error.message);
     }
-
-    return foundUser;
   }
 
   async create(userToCreate: IGroup): Promise<IGroup> {
@@ -43,17 +47,21 @@ export class GroupRepositoryImpl extends AbstractRepository<Group> implements Gr
 
   async addUsersToGroup(groupId: number, users: IUser[]): Promise<void> {
     await this.manager.transaction(async transactionManager => {
-      if (users.length === 0) {
-        throw new createError.NotFound('Cannot found users by given user ids');
-      }
+      try {
+        if (users.length === 0) {
+          throw new createError.NotFound('Cannot found users by given user ids');
+        }
 
-      const group = await this.repository.findOne(groupId);
-      if (!isDefined(group)) {
-        throw new createError.NotFound('Cannot found group by given group id');
-      }
+        const group = await this.repository.findOne(groupId);
+        if (!isDefined(group)) {
+          throw new createError.NotFound('Cannot found group by given group id');
+        }
 
-      group.users = users;
-      await transactionManager.save(group);
+        group.users = users;
+        await transactionManager.save(group);
+      } catch (error) {
+        throw new createError.BadRequest(error.message);
+      }
     });
   }
 }

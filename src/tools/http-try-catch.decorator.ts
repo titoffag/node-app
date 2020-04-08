@@ -11,12 +11,13 @@ export function httpTryCatch(target: any, propertyKey: string, descriptor: Prope
     } catch (error) {
       switch (error.status) {
         case STATUS_CODE.NOT_FOUND:
+          logger.error(error.message);
           return this.notFound();
         case STATUS_CODE.BAD_REQUEST:
+          logger.error(error.message);
           return this.badRequest(error.message);
         default:
           logger.error(`Something went wrong: ${error.message}`);
-
           return this.internalServerError(error);
       }
     }

@@ -8,6 +8,7 @@ import {
   httpPost,
   httpPut,
   request,
+  requestBody,
   response,
   BaseHttpController
 } from 'inversify-express-utils';
@@ -24,11 +25,8 @@ export class AuthController extends BaseHttpController {
 
   @httpTryCatch
   @httpPost('/login', passport.authenticate('local'))
-  async login(@request() request: Request) {
-    const { username, password } = request.body;
-
+  async login(@requestBody() { username, password }: any) {
     await this.authService.login(username, password);
-    
     return this.ok();
   }
 

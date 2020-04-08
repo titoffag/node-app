@@ -25,13 +25,13 @@ export class Group implements IGroup {
   permissions: Array<Permission>;
 
   // todo: make lazy loading relation
-  @ManyToMany(() => User, { cascade: true })
+  @ManyToMany(() => User, user => user.groups, { cascade: true })
   @JoinTable({
     name: 'groups_users',
     joinColumn: { name: 'group_id', referencedColumnName: 'id' },
     inverseJoinColumn: { name: 'user_id', referencedColumnName: 'id' },
   })
-  users: User[];
+  users: Promise<User[]>;
 
   constructor(name: string, permissions: Array<Permission>) {
     this.name = name;

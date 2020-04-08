@@ -8,8 +8,11 @@ import {
   httpPost,
   httpPut,
   request,
+  requestParam,
+  requestBody,
+  queryParam,
   response,
-  BaseHttpController
+  BaseHttpController,
 } from 'inversify-express-utils';
 
 import { DI_TOKEN, STATUS_CODE } from '../../constants';
@@ -25,63 +28,45 @@ export class GroupController extends BaseHttpController {
 
   @httpTryCatch
   @httpPost('/', validator.body(groupSchema))
-  async create(@request() request: Request) {
-    const { name, permissions } = request.body;
-
+  async create(@requestBody() { name, permissions }: any) {
     const groupToCreate = new Group(name, permissions);
     const createdGroup = await this.groupService.create(groupToCreate);
-
     return this.created(`/groups/${createdGroup.id}`, createdGroup);
   }
 
   @httpTryCatch
   @httpGet('/')
-  async getAll(@request() request: Request) {
+  async getAll() {
     const groups = await this.groupService.getAll();
-    
     return this.json(groups);
   }
 
   @httpTryCatch
   @httpGet('/:id')
-  async getById(@request() request: Request) {
-    const { id } = request.params;
-
+  async getById(@requestParam('id') id: string) {
     const group = await this.groupService.getById(+id);
-    
     return this.json(group);
   }
 
   @httpTryCatch
   @httpPut('/:id', validator.body(groupSchema))
-  async update(@request() request: Request) {
-    const { id } = request.params;
-    const { name, permissions } = request.body;
-
+  async update(@requestParam('id') id: string, @requestBody() { name, permissions }: any) {
     const groupToUpdate = new Group(name, permissions);
     await this.groupService.update(+id, groupToUpdate);
-    
     return this.statusCode(STATUS_CODE.NO_DATA);
   }
 
   @httpTryCatch
   @httpDelete('/:id')
-  async remove(@request() request: Request) {
-    const { id } = request.params;
-
+  async remove(@requestParam('id') id: string) {
     await this.groupService.remove(+id);
-    
     return this.statusCode(STATUS_CODE.NO_DATA);
   }
 
   @httpTryCatch
   @httpPut('/:id/add-users')
-  async addUsersToGroup(@request() request: Request) {
-    const { id } = request.params;
-    const { userIds } = request.body;
-
+  async addUsersToGroup(@requestParam('id') id: string, @requestBody() { userIds }: any) {
     await this.groupService.addUsersToGroup(+id, userIds);
-    
     return this.statusCode(STATUS_CODE.NO_DATA);
   }
 

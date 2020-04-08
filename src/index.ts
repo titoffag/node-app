@@ -16,7 +16,7 @@ startServer();
 
 process
   .on('unhandledRejection', (reason: number, promise: Promise<any>) => {
-    logger.error(`Unhandled rejection of promise: ${JSON.stringify(promise)} by reason: ${reason}`);
+    logger.error(`Unhandled rejection of promise: by reason: ${reason}`);
     process.exit(1);
   })
   .on('uncaughtException', (error: Error) => {
