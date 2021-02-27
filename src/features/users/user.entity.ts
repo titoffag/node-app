@@ -1,4 +1,6 @@
-import { Check, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Check, Column, Entity, PrimaryGeneratedColumn, ManyToMany } from 'typeorm';
+
+import { Group } from '../users';
 
 export interface IUser {
   id: number;
@@ -25,13 +27,17 @@ export class User implements IUser {
   password: string;
 
   @Column()
-  @Check(`"age" >= 4 "AND" age <= 130`)
+  @Check(`"age" >= 4 "AND" "age" <= 130`)
   age: number;
 
   @Column({
     name: 'isdeleted',
   })
   isDeleted: boolean;
+
+  // todo: todo
+  @ManyToMany(() => Group, group => group.users)
+  users: Promise<Group[]>;
 
   constructor(login: string, password: string, age: number, isDeleted?: boolean) {
     this.login = login;

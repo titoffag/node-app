@@ -8,92 +8,70 @@ import {
   httpPost,
   httpPut,
   request,
+  requestParam,
+  requestBody,
+  queryParam,
   response,
+  BaseHttpController,
 } from 'inversify-express-utils';
 
 import { DI_TOKEN, STATUS_CODE } from '../../constants';
-import { httpTryCatch } from '../../tools';
-import { validator } from '../../tools/validator';
+import { httpTryCatch, validator, methodNotAllowed } from '../../tools';
 
-import { GroupController } from './group-controller.interface';
 import { GroupService } from './group-service.interface';
 import { Group } from './group.entity';
 import { groupSchema } from './group.validation';
 
 @controller('/groups')
-export class GroupControllerImpl implements GroupController {
+export class GroupController extends BaseHttpController {
   @inject(DI_TOKEN.GroupService) private readonly groupService: GroupService;
 
   @httpTryCatch
   @httpPost('/', validator.body(groupSchema))
-  async create(@request() request: Request, @response() response: Response) {
-    const { name, permissions } = request.body;
-
+  async create(@requestBody() { name, permissions }: any) {
     const groupToCreate = new Group(name, permissions);
-    const id = await this.groupService.create(groupToCreate);
-    response.location(`/groups/${id}`).sendStatus(STATUS_CODE.CREATED);
+    const createdGroup = await this.groupService.create(groupToCreate);
+    return this.created(`/groups/${createdGroup.id}`, createdGroup);
   }
 
   @httpTryCatch
   @httpGet('/')
-  async getAll(@request() request: Request, @response() response: Response) {
+  async getAll() {
     const groups = await this.groupService.getAll();
-    response.status(STATUS_CODE.OK).json(groups);
+    return this.json(groups);
   }
 
   @httpTryCatch
   @httpGet('/:id')
-  async getById(@request() request: Request, @response() response: Response) {
-    const { id } = request.params;
-
+  async getById(@requestParam('id') id: string) {
     const group = await this.groupService.getById(+id);
-    response.status(STATUS_CODE.OK).json(group);
+    return this.json(group);
   }
 
   @httpTryCatch
   @httpPut('/:id', validator.body(groupSchema))
-  async update(@request() request: Request, @response() response: Response) {
-    const { id } = request.params;
-    const { name, permissions } = request.body;
-
+  async update(@requestParam('id') id: string, @requestBody() { name, permissions }: any) {
     const groupToUpdate = new Group(name, permissions);
     await this.groupService.update(+id, groupToUpdate);
-    response.sendStatus(STATUS_CODE.NO_DATA);
+    return this.statusCode(STATUS_CODE.NO_DATA);
   }
 
   @httpTryCatch
   @httpDelete('/:id')
-  async remove(@request() request: Request, @response() response: Response) {
-    const { id } = request.params;
-
+  async remove(@requestParam('id') id: string) {
     await this.groupService.remove(+id);
-    response.sendStatus(STATUS_CODE.NO_DATA);
+    return this.statusCode(STATUS_CODE.NO_DATA);
   }
 
   @httpTryCatch
   @httpPut('/:id/add-users')
-  async addUsersToGroup(@request() request: Request, @response() response: Response) {
-    const { id } = request.params;
-    const { userIds } = request.body;
-
+  async addUsersToGroup(@requestParam('id') id: string, @requestBody() { userIds }: any) {
     await this.groupService.addUsersToGroup(+id, userIds);
-    response.sendStatus(STATUS_CODE.NO_DATA);
+    return this.statusCode(STATUS_CODE.NO_DATA);
   }
 
   @all('**')
   async methodNotAllowed(@request() request: Request, @response() response: Response) {
-    const {
-      route: { methods, path },
-      method,
-    } = request;
-    const allowedMethods = Object.keys(methods)
-      .filter(method => method !== '_all')
-      .map(key => key.toUpperCase())
-      .join(', ') || 'GET, POST, PUT, DELETE';
-
-    const message = `Unsupported method ${method} applied at ${path}. Allowed methods: ${allowedMethods}`;
-    console.log(message);
-
-    response.header('Allow', allowedMethods).sendStatus(STATUS_CODE.METHOD_NOT_ALLOWED);
+    return methodNotAllowed(request, response);
   }
 }

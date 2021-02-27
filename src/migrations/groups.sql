@@ -1,14 +1,12 @@
-create schema "node";
+CREATE SCHEMA IF NOT EXISTS "node";
 
 CREATE TYPE permission AS ENUM ('READ', 'WRITE', 'DELETE', 'SHARE', 'UPLOAD_FILES');
 
 CREATE TABLE "node".groups (
     id SERIAL PRIMARY KEY,
     name VARCHAR (255) UNIQUE NOT NULL,
-    permissions permission[] NOT NULL,
+    permissions permission[] NOT NULL
 );
-
-SELECT * FROM "node".groups;
 
 INSERT INTO "node".groups (
     name,
@@ -16,19 +14,19 @@ INSERT INTO "node".groups (
 )
 VALUES (
     'readers',
-    '{ "READ" }'
+    '"READ"'
 ), (
     'writers',
-    '{ "READ", "WRITE" }'
+    '"READ", "WRITE"'
 ), (
     'speakers',
-    '{ "READ", "SHARE" }'
+    '"READ", "SHARE"'
 ), (
     'contributors',
-    '{ "READ", "WRITE", "UPLOAD_FILES" }'
+    '"READ", "WRITE", "UPLOAD_FILES"'
 ), (
     'gods',
-    '{ "READ", "WRITE", "DELETE", "SHARE", "UPLOAD_FILES" }'
+    '"READ", "WRITE", "DELETE", "SHARE", "UPLOAD_FILES"'
 );
 
 CREATE TABLE "node".groups_users (

@@ -14,7 +14,7 @@ export class UserServiceImpl implements UserService {
     return this.userRepository.getById(id);
   }
 
-  async create(userToCreate: IUser): Promise<number> {
+  async create(userToCreate: IUser): Promise<IUser> {
     return this.userRepository.create(userToCreate);
   }
 

@@ -16,7 +16,7 @@ export class GroupServiceImpl implements GroupService {
     return this.groupRepository.getById(id);
   }
 
-  async create(userToCreate: IGroup): Promise<number> {
+  async create(userToCreate: IGroup): Promise<IGroup> {
     return this.groupRepository.create(userToCreate);
   }
 

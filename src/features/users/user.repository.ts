@@ -1,7 +1,6 @@
 import createError from 'http-errors';
-import { AbstractRepository, EntityRepository } from 'typeorm';
+import { AbstractRepository, EntityRepository, Like } from 'typeorm';
 
-import { STATUS_CODE } from '../../constants';
 import { isDefined } from '../../tools';
 
 import { UserRepository } from './user-repository.interface';
@@ -10,19 +9,23 @@ import { IUser, User } from './user.entity';
 @EntityRepository(User)
 export class UserRepositoryImpl extends AbstractRepository<User> implements UserRepository {
   async getById(id: number): Promise<IUser> {
-    const foundUser = await this.repository.findOne(id);
+    try {
+      const foundUser = await this.repository.findOne(id);
 
-    if (!isDefined(foundUser)) {
-      throw createError(STATUS_CODE.NOT_FOUND, 'Oops! Cannot found user by given id');
+      if (!isDefined(foundUser)) {
+        throw new createError.NotFound('Oops! Cannot found user by given id');
+      }
+
+      return foundUser;
+    } catch (error) {
+      throw new createError.BadRequest(error.message);
     }
-
-    return foundUser;
   }
 
-  async create(userToCreate: IUser): Promise<number> {
+  async create(userToCreate: IUser): Promise<IUser> {
     const createdUser = await this.repository.save(userToCreate);
 
-    return createdUser.id;
+    return createdUser;
   }
 
   async update(id: number, userToUpdate: IUser): Promise<void> {
@@ -30,19 +33,16 @@ export class UserRepositoryImpl extends AbstractRepository<User> implements User
   }
 
   async getAutoSuggest(loginSubstring: string, limit: number): Promise<IUser[]> {
-    const byLoginProperty = (user: IUser, nextUser: IUser) =>
-      user.login.toLowerCase() >= nextUser.login.toLowerCase() ? 1 : -1;
-    const byLoginSubstring = (user: IUser) => user.login.includes(loginSubstring);
+    const users = await this.repository.find({
+      where: { login: Like(`%${loginSubstring}%`) },
+      order: { login: 'ASC' },
+      take: limit,
+    });
 
-    const users = await this.repository.find();
-
-    return users
-      .sort(byLoginProperty)
-      .filter(byLoginSubstring)
-      .slice(0, limit);
+    return users;
   }
 
-  async   getByIds(userIds: number[]): Promise<IUser[]> {
+  async getByIds(userIds: number[]): Promise<IUser[]> {
     return await this.repository.findByIds(userIds);
   }
 

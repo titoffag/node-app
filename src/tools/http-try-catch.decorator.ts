@@ -1,5 +1,7 @@
 import { STATUS_CODE } from '../constants';
 
+import { logger } from './logger';
+
 export function httpTryCatch(target: any, propertyKey: string, descriptor: PropertyDescriptor) {
   const originalMethod = descriptor.value;
 
@@ -7,9 +9,17 @@ export function httpTryCatch(target: any, propertyKey: string, descriptor: Prope
     try {
       return await originalMethod.apply(this, args);
     } catch (error) {
-      const [, response] = args;
-
-      response.status(STATUS_CODE.INTERNAL_SERVER_ERROR).json({ error: error.message });
+      switch (error.status) {
+        case STATUS_CODE.NOT_FOUND:
+          logger.error(error.message);
+          return this.notFound();
+        case STATUS_CODE.BAD_REQUEST:
+          logger.error(error.message);
+          return this.badRequest(error.message);
+        default:
+          logger.error(`Something went wrong: ${error.message}`);
+          return this.internalServerError(error);
+      }
     }
   };
 
